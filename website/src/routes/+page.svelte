@@ -1,20 +1,20 @@
 <script>
-    let answer = "";
-    let logoUrl = "";
-    let feedback = "";
-    let correctAnswer = "";
+    import { onMount } from "svelte";
 
-    fetchRandomLogo();
+    let answer = "";
+    let feedback = "";
+    let logoUrl = "";
+    let correctAnswer = "";
 
     async function fetchRandomLogo() {
         const response = await fetch("http://localhost:3000/api/logos/random");
+        console.log(response);
         if (response.ok) {
             const data = await response.json();
             logoUrl = data.url;
             correctAnswer = data.id;
         } else {
-            logoUrl = "";
-            correctAnswer = "";
+            console.log("Error fetching logo");
         }
     }
 
@@ -32,6 +32,10 @@
         correctAnswer = "";
         fetchRandomLogo();
     }
+
+    onMount(() => {
+        fetchRandomLogo();
+    });
 </script>
 
 <main>
@@ -61,11 +65,14 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        margin: 50px;
+        padding: 2% 5%;
+        max-width: 650px;
+        margin: 0 auto;
     }
 
     .logo-container {
-        width: 300px;
+        width: 80%;
+        max-width: 300px;
         height: 300px;
         display: flex;
         justify-content: center;
@@ -75,7 +82,7 @@
     }
 
     .logo-container img {
-        width: 80%;
+        max-width: 80%;
         height: auto;
     }
 
@@ -84,7 +91,7 @@
     }
 
     input[type="text"] {
-        padding: 5px;
+        padding: 10px;
         font-size: 16px;
     }
 
@@ -103,8 +110,8 @@
     }
 
     p {
-        font-size: 18px;
-        font-weight: bold;
-        margin: 10px 0;
+        font-size: 14px;
+        margin: 5px 0;
+        text-align: center;
     }
 </style>
