@@ -5,32 +5,38 @@ const app = express();
 const PORT = 3000;
 const cors = require('cors');
 
-// Directory where your logo files are stored
 const logoDirectory = path.join(__dirname, 'logos');
 
-// Enable CORS
 app.use(cors());
 
-// Endpoint to get a random logo
+function isPngFile(filename) {
+  return path.extname(filename).toLowerCase() === '.png';
+}
+
 app.get('/api/logos/random', (req, res) => {
   fs.readdir(logoDirectory, (err, files) => {
     if (err) {
       res.status(500).json({ message: 'Error reading logo files' });
     } else {
-      const randomFileName = files[Math.floor(Math.random() * files.length)];
-      const randomLogo = {
-        id: randomFileName.split('.')[0],
-        url: `http://localhost:${PORT}/api/logos/${randomFileName.split('.')[0]}`,
-      };
-      res.json({
-        id: randomLogo.id,
-        url: randomLogo.url,
-      });
+      const pngFiles = files.filter(isPngFile);
+
+      if (pngFiles.length === 0) {
+        res.status(404).json({ message: 'No PNG logos found' });
+      } else {
+        const randomFileName = pngFiles[Math.floor(Math.random() * pngFiles.length)];
+        const randomLogo = {
+          id: randomFileName.split('.')[0],
+          url: `http://localhost:${PORT}/api/logos/${randomFileName.split('.')[0]}`,
+        };
+        res.json({
+          id: randomLogo.id,
+          url: randomLogo.url,
+        });
+      }
     }
   });
 });
 
-// Endpoint to get a logo by ID
 app.get('/api/logos/:id', (req, res) => {
   const logoId = req.params.id;
   const logoFileName = `${logoId}.png`;
