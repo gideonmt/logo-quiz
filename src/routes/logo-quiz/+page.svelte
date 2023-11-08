@@ -1,19 +1,31 @@
 <script>
     import { onMount } from "svelte";
+    const logos = import.meta.glob("$lib/assets/logos/*.png");
 
     let answer = "";
     let feedback = "";
     let logoUrl = "";
     let correctAnswer = "";
 
-    // get logos from ../../static/logos folder and make logos an array with id being the name of the file (without .png) and path being the path to the logo
+    const logosArray = [];
 
-    // get random logo
-    const getRandomLogo = async () => {
-        
-    };
+    for (const key in logos) {
+        if (logos.hasOwnProperty(key)) {
+            const name = key
+                .replace("/src/lib/assets/logos/", "")
+                .replace(".png", "");
+            const url = key;
+            logosArray.push({ name, url });
+        }
+    }
 
-    // check answer
+    async function getRandomLogo() {
+        const randomIndex = Math.floor(Math.random() * logosArray.length);
+        const randomLogo = logosArray[randomIndex];
+        logoUrl = randomLogo.url;
+        correctAnswer = randomLogo.name;
+    }
+
     const checkAnswer = () => {
         if (answer.toLowerCase() === correctAnswer.toLowerCase()) {
             feedback = "Correct";
@@ -22,100 +34,132 @@
         }
     };
 
-    // get next logo
     const nextLogo = () => {
         answer = "";
         feedback = "";
         getRandomLogo();
     };
 
-    onMount(() => {
-        nextLogo();
+    onMount(async () => {
+        getRandomLogo();
     });
 </script>
 
 <main>
-    <h1>
-        Logo Quiz WIP
-    </h1>
+    <h1>Logo Quiz</h1>
     {#if logoUrl}
         <div class="logo-container">
             <img src={logoUrl} alt="Logo" />
         </div>
     {/if}
 
-    <div>
+    <div class="row">
         <input type="text" bind:value={answer} placeholder="Enter Logo Name" />
         <button on:click={checkAnswer}>Check</button>
     </div>
 
-    {#if feedback}
-        <p>{feedback}</p>
-        {#if feedback === "Wrong"}
-            <p>The correct answer is {correctAnswer}</p>
-        {/if}
+    {#if feedback}<p>{feedback}. {#if feedback === "Wrong"}The correct answer is {correctAnswer}.{/if}</p>
         <button on:click={nextLogo}>Next</button>
     {/if}
 </main>
 
 <style>
-    :root {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 2% 5%;
-        max-width: 650px;
-        margin: 0 auto;
-        background-color: #222;
+    main {
+        background-color: #121212;
         color: #fff;
-        font-family: Arial, Helvetica, sans-serif;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding: 20px;
+        border-radius: 10px;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
     }
 
     .logo-container {
-        width: 80%;
         max-width: 300px;
+        width: 300px;
         height: 300px;
+        padding: auto;
+        border: 2px solid #fff;
+        border-radius: 10px;
         display: flex;
         justify-content: center;
         align-items: center;
-        border: 1px solid #ccc;
-        border-radius: 5px;
+        margin: 0 auto;
+        background-color: #eee;
     }
 
-    .logo-container img {
-        max-width: 80%;
-        height: auto;
+    div.row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #333;
+        color: #fff;
+        outline: 2px solid #555;
+        border: none;        
+        border-radius: 10px;
+        padding: 5px 10px;
+        height: 50px;
+        margin: 10px 0;
     }
 
-    div {
-        margin: 10px;
+    img {
+        width: 200px;
     }
 
     input[type="text"] {
-        padding: 0 10px;
-        margin: 0;
+        padding: 0;
         font-size: 16px;
-        height: 40px;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        margin: 0;
+        width: 70%;
     }
 
     button {
         padding: 10px 20px;
-        background-color: #0078d4;
+        background-color: #0063cd;
+        color: #fff;
         border: none;
         border-radius: 5px;
         cursor: pointer;
+        transition: background-color 0.3s;
         height: 40px;
     }
 
-    img {
-        max-width: 100%;
-        height: auto;
+    button:hover {
+        background-color: #007bff;
     }
 
     p {
-        font-size: 14px;
-        margin: 5px 0;
-        text-align: center;
+        font-size: 18px;
+        margin: 10px 0;
+    }
+
+    :root {
+        background-color: #121212;
+        color: #fff;
+    }
+
+    input[type="text"] {
+        background-color: #333;
+        color: #fff;
+        border: none;
+        height: 20px;
+    }
+
+    input[type="text"],
+    button {
+        margin: 0;
+    }
+
+    :focus {
+        outline: none;
     }
 </style>
