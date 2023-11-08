@@ -6,39 +6,38 @@
     let logoUrl = "";
     let correctAnswer = "";
 
-    async function fetchRandomLogo() {
-        const response = await fetch("http://localhost:3000/api/logos/random");
-        console.log(response);
-        if (response.ok) {
-            const data = await response.json();
-            logoUrl = data.url;
-            correctAnswer = data.id;
-        } else {
-            console.log("Error fetching logo");
-        }
-    }
+    // get logos from ../../static/logos folder and make logos an array with id being the name of the file (without .png) and path being the path to the logo
 
-    function checkAnswer() {
+    // get random logo
+    const getRandomLogo = async () => {
+        
+    };
+
+    // check answer
+    const checkAnswer = () => {
         if (answer.toLowerCase() === correctAnswer.toLowerCase()) {
-            feedback = "Correct!";
+            feedback = "Correct";
         } else {
             feedback = "Wrong";
         }
-    }
+    };
 
-    function nextLogo() {
+    // get next logo
+    const nextLogo = () => {
         answer = "";
         feedback = "";
-        correctAnswer = "";
-        fetchRandomLogo();
-    }
+        getRandomLogo();
+    };
 
     onMount(() => {
-        fetchRandomLogo();
+        nextLogo();
     });
 </script>
 
 <main>
+    <h1>
+        Logo Quiz WIP
+    </h1>
     {#if logoUrl}
         <div class="logo-container">
             <img src={logoUrl} alt="Logo" />
