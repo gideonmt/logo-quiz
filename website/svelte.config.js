@@ -1,13 +1,14 @@
-import adapter from '@sveltejs/adapter-auto';
+import adapter from '@sveltejs/adapter-static';
 
-/** @type {import('@sveltejs/kit').Config} */
-const config = {
-	kit: {
-		// adapter-auto only supports some environments, see https://kit.svelte.dev/docs/adapter-auto for a list.
-		// If your environment is not supported or you settled on a specific environment, switch out the adapter.
-		// See https://kit.svelte.dev/docs/adapters for more information about adapters.
-		adapter: adapter()
-	}
+export default {
+    kit: {
+        // Your preferred adapter, such as adapter-static or adapter-node.
+        // See SvelteKit documentation for more details on adapters.
+        adapter: adapter({
+            // Options for the adapter if needed.
+            // For example, you can specify the output directory.
+            // output: 'build'
+        }),
+        // Other configuration options for your project
+    },
 };
-
-export default config;
