@@ -1,11 +1,12 @@
 <script>
     import { onMount } from "svelte";
-    const logos = import.meta.glob("$lib/assets/logos/*.png");
 
+    const logos = import.meta.glob("$lib/assets/logos/*.png");
     let answer = "";
     let feedback = "";
     let logoUrl = "";
     let correctAnswer = "";
+    let oldLogos = [];
 
     const logosArray = [];
 
@@ -27,21 +28,36 @@
     }
 
     const checkAnswer = () => {
-        if (answer.toLowerCase() === correctAnswer.toLowerCase()) {
-            feedback = "Correct";
-        } else {
-            feedback = "Wrong";
-        }
+        feedback =
+            answer.toLowerCase() === correctAnswer.toLowerCase()
+                ? "Correct"
+                : "Wrong";
     };
 
     const nextLogo = () => {
+        if (oldLogos.length === logosArray.length) {
+            oldLogos = [];
+        }
+
+        if (logoUrl) {
+            oldLogos.push(logoUrl);
+        }
+
+        getRandomLogo();
+
+        while (oldLogos.includes(logoUrl)) {
+            if (oldLogos.length === logosArray.length) {
+                oldLogos = [];
+            }
+            getRandomLogo();
+        }
+
         answer = "";
         feedback = "";
-        getRandomLogo();
     };
 
     onMount(async () => {
-        getRandomLogo();
+        nextLogo();
     });
 </script>
 
@@ -58,7 +74,10 @@
         <button on:click={checkAnswer}>Check</button>
     </div>
 
-    {#if feedback}<p>{feedback}. {#if feedback === "Wrong"}The correct answer is {correctAnswer}.{/if}</p>
+    {#if feedback}
+        <p>
+            {feedback}. {#if feedback === "Wrong"}The correct answer is {correctAnswer}.{/if}
+        </p>
         <button on:click={nextLogo}>Next</button>
     {/if}
 </main>
@@ -84,7 +103,6 @@
         max-width: 300px;
         width: 300px;
         height: 300px;
-        padding: auto;
         border: 2px solid #fff;
         border-radius: 10px;
         display: flex;
@@ -96,13 +114,12 @@
 
     div.row {
         display: flex;
-        flex-direction: row;
         justify-content: space-between;
         align-items: center;
         background-color: #333;
         color: #fff;
         outline: 2px solid #555;
-        border: none;        
+        border: none;
         border-radius: 10px;
         padding: 5px 10px;
         height: 50px;
@@ -118,7 +135,6 @@
         font-size: 16px;
         border: 2px solid #ccc;
         border-radius: 5px;
-        margin: 0;
         width: 70%;
     }
 
