@@ -1,6 +1,6 @@
 # Guess the Logo Game
 
-## Self-Hosting
+## Get Started
 
 ### Prerequisites
 
@@ -23,10 +23,9 @@
 
 ### Usage
 
-3. Navigate to the website folder and install dependencies:
+3. Install dependencies:
 
    ```bash
-   cd website
    npm install
    ```
 
@@ -35,16 +34,7 @@
    ```bash
    npm run dev -- --open
    ```
+   
+## Contributing 
 
-5. Go back to the main folder, navigate to the api, and install dependencies:
-
-   ```bash
-   cd ../api
-   npm install
-   ```
-
-6. Start the API:
-
-   ```bash
-   node index.js
-   ```
+Pull requests and issues are welcome and appreciated. Thank you!
