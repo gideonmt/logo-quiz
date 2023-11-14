@@ -6,7 +6,11 @@
     let feedback = "";
     let logoUrl = "";
     let correctAnswer = "";
-    let oldLogos = [];
+    let logoIndex = 0;
+    let end = false;
+    let randomLogos = [];
+    let correctCount = 0;
+    let correctPercentage = 0;
 
     const logosArray = [];
 
@@ -20,11 +24,16 @@
         }
     }
 
-    async function getRandomLogo() {
-        const randomIndex = Math.floor(Math.random() * logosArray.length);
-        const randomLogo = logosArray[randomIndex];
-        logoUrl = randomLogo.url;
-        correctAnswer = randomLogo.name;
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    async function randomLogoList() {
+        randomLogos = [...logosArray];
+        shuffleArray(randomLogos);
     }
 
     const checkAnswer = () => {
@@ -32,53 +41,77 @@
             answer.toLowerCase() === correctAnswer.toLowerCase()
                 ? "Correct"
                 : "Wrong";
+        if (feedback === "Correct") {
+            correctCount++;
+        }
+    };
+
+    const start = async () => {
+        end = false;
+        correctCount = 0;
+        correctPercentage = 0;
+        await randomLogoList();
+        nextLogo();
     };
 
     const nextLogo = () => {
-        if (oldLogos.length === logosArray.length) {
-            oldLogos = [];
-        }
-
-        if (logoUrl) {
-            oldLogos.push(logoUrl);
-        }
-
-        getRandomLogo();
-
-        while (oldLogos.includes(logoUrl)) {
-            if (oldLogos.length === logosArray.length) {
-                oldLogos = [];
-            }
-            getRandomLogo();
-        }
-
         answer = "";
         feedback = "";
+        if (logoIndex < randomLogos.length) {
+            logoUrl = randomLogos[logoIndex].url;
+            correctAnswer = randomLogos[logoIndex].name;
+            logoIndex++;
+        } else {
+            endGame();
+        }
+    };
+
+    const endGame = () => {
+        logoUrl = "";
+        feedback = "";
+        answer = "";
+        logoIndex = 0;
+        end = true;
+        correctPercentage = Math.round(
+            (correctCount / logosArray.length) * 100
+        );
     };
 
     onMount(async () => {
-        nextLogo();
+        await start();
     });
 </script>
 
 <main>
     <h1>Logo Quiz</h1>
-    {#if logoUrl}
-        <div class="logo-container">
-            <img src={logoUrl} alt="Logo" />
+    {#if !end}
+        {#if logoUrl}
+            <div class="logo-container">
+                <img src={logoUrl} alt="Logo" />
+            </div>
+        {/if}
+
+        <div class="row">
+            <input
+                type="text"
+                bind:value={answer}
+                placeholder="Enter Logo Name"
+            />
+            <button on:click={checkAnswer}>Check</button>
         </div>
+
+        {#if feedback}
+            <p>
+                {feedback}. {#if feedback === "Wrong"}The correct answer is {correctAnswer}.{/if}
+            </p>
+            <button on:click={nextLogo}>Next</button>
+        {/if}
     {/if}
 
-    <div class="row">
-        <input type="text" bind:value={answer} placeholder="Enter Logo Name" />
-        <button on:click={checkAnswer}>Check</button>
-    </div>
-
-    {#if feedback}
-        <p>
-            {feedback}. {#if feedback === "Wrong"}The correct answer is {correctAnswer}.{/if}
-        </p>
-        <button on:click={nextLogo}>Next</button>
+    {#if end}
+        <h2>End of quiz</h2>
+        <p>You got {correctPercentage}% correct.</p>
+        <button on:click={start}>Restart</button>
     {/if}
 </main>
 
