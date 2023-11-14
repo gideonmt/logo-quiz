@@ -124,7 +124,7 @@
         text-align: center;
         padding: 20px;
         border-radius: 10px;
-        max-width: 400px;
+        max-width: min(80vw, 400px);
         margin: 0 auto;
     }
 
@@ -134,9 +134,8 @@
     }
 
     .logo-container {
-        max-width: 300px;
-        width: 300px;
-        height: 300px;
+        min-width: 20%;
+        aspect-ratio: 1 / 1;
         border: 2px solid #fff;
         border-radius: 10px;
         display: flex;
@@ -156,12 +155,13 @@
         border: none;
         border-radius: 10px;
         padding: 5px 10px;
-        height: 50px;
         margin: 10px 0;
     }
 
     img {
-        width: 200px;
+        margin: 10%;
+        max-width: 80%;
+        max-height: 80%;
     }
 
     input[type="text"] {
@@ -169,7 +169,7 @@
         font-size: 16px;
         border: 2px solid #ccc;
         border-radius: 5px;
-        width: 70%;
+        width: 100%;
     }
 
     button {
