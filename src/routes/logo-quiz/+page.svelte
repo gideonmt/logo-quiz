@@ -17,7 +17,7 @@
     for (const key in logos) {
         if (logos.hasOwnProperty(key)) {
             const name = key
-                .replace("/src/lib/assets/logos/", "")
+                .replace(/.*\//, "")
                 .replace(".png", "");
             const url = key;
             logosArray.push({ name, url });
