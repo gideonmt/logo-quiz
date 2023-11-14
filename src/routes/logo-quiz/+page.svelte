@@ -96,8 +96,9 @@
                 type="text"
                 bind:value={answer}
                 placeholder="Enter Logo Name"
+                disabled={feedback}
             />
-            <button on:click={checkAnswer}>Check</button>
+            <button on:click={checkAnswer} disabled={feedback}>Check</button>
         </div>
 
         {#if feedback}
@@ -184,6 +185,10 @@
 
     button:hover {
         background-color: #007bff;
+    }
+
+    *:disabled {
+        cursor: not-allowed;
     }
 
     p {
