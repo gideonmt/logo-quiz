@@ -15,28 +15,3 @@
 
     <a href="/logo-quiz">Logo quiz</a>
 </main>
-
-<style>
-    :root {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 2% 5%;
-        max-width: 650px;
-        margin: 0 auto;
-        background-color: #222;
-    }
-
-    p {
-        font-size: 14px;
-        margin: 5px 0;
-        text-align: center;
-    }
-
-    h1 {
-        font-size: 24px;
-        margin: 5px 0;
-        text-align: center;
-    }
-</style>
